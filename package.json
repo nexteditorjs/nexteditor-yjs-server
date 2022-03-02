@@ -1,0 +1,22 @@
+{
+  "name": "nexteditor-yjs-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@nexteditorjs-github:nexteditorjs/nexteditor-yjs-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lib0": "^0.2.42",
+    "lodash.debounce": "^4.0.8",
+    "ws": "^8.5.0",
+    "y-protocols": "^1.0.5",
+    "yjs": "^13.5.27"
+  }
+}
