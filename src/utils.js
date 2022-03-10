@@ -160,7 +160,7 @@ const getYDoc = (docname, gc = true) => map.setIfUndefined(docs, docname, () => 
   const blocks = new Y.Array();
   blocks.push([blockData]);
   //
-  docObject.set('blocks', blocks);
+  docObject.set('root', blocks);
 
 
   doc.gc = gc
