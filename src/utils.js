@@ -147,8 +147,7 @@ class WSSharedDoc extends Y.Doc {
 const getYDoc = (docname, gc = true) => map.setIfUndefined(docs, docname, () => {
   const doc = new WSSharedDoc(docname)
   //
-  const docObject = doc.getMap('doc');
-
+  // create empty doc
   const blockText = new Y.Text();
   const blockData = new Y.Map(Object.entries({
     id: 'abd',
@@ -160,7 +159,12 @@ const getYDoc = (docname, gc = true) => map.setIfUndefined(docs, docname, () => 
   const blocks = new Y.Array();
   blocks.push([blockData]);
   //
-  docObject.set('root', blocks);
+  const allBlocksObject = new Y.Map();
+  allBlocksObject.set('root', blocks);
+
+  const docObject = doc.getMap('doc');
+  docObject.set('blocks', allBlocksObject);
+  docObject.set('meta', new Y.Map());
 
 
   doc.gc = gc
