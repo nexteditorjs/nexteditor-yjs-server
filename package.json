@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@nexteditorjs/nexteditor-core": "^0.0,.20",
     "lib0": "^0.2.42",
     "lodash.debounce": "^4.0.8",
     "ws": "^8.5.0",

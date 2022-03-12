@@ -1,6 +1,7 @@
 const Y = require('yjs')
 const syncProtocol = require('y-protocols/dist/sync.cjs')
 const awarenessProtocol = require('y-protocols/dist/awareness.cjs')
+const { genId } = require('@nexteditorjs/nexteditor-core/dist/common');
 
 const encoding = require('lib0/dist/encoding.cjs')
 const decoding = require('lib0/dist/decoding.cjs')
@@ -144,28 +145,40 @@ class WSSharedDoc extends Y.Doc {
  * @param {boolean} gc - whether to allow gc on the doc (applies only when created)
  * @return {WSSharedDoc}
  */
+
+ let docTemplate = null;
+
+ exports.setDocTemplate = (template) => {
+  docTemplate = template;
+ };
+ 
 const getYDoc = (docname, gc = true) => map.setIfUndefined(docs, docname, () => {
   const doc = new WSSharedDoc(docname)
-  //
-  // create empty doc
-  const blockText = new Y.Text();
-  const blockData = new Y.Map(Object.entries({
-    id: 'abd',
-    type: 'text',
-    text: blockText,
-  }));
-  //
-  blockData.set('text', blockText);
-  const blocks = new Y.Array();
-  blocks.push([blockData]);
-  //
-  const allBlocksObject = new Y.Map();
-  allBlocksObject.set('root', blocks);
-
   const docObject = doc.getMap('doc');
-  docObject.set('blocks', allBlocksObject);
-  docObject.set('meta', new Y.Map());
-
+  if (docTemplate) {
+    Object.entries(docTemplate).forEach(([key, value]) => {
+      docObject.set(key, value);
+    });
+  } else {
+    // create empty doc
+    const blockText = new Y.Text();
+    const blockData = new Y.Map(Object.entries({
+      id: genId(),
+      type: 'text',
+      text: blockText,
+    }));
+    //
+    blockData.set('text', blockText);
+    const blocks = new Y.Array();
+    blocks.push([blockData]);
+    //
+    const allBlocksObject = new Y.Map();
+    allBlocksObject.set('root', blocks);
+    //
+    docObject.set('blocks', allBlocksObject);
+    docObject.set('meta', new Y.Map());
+  }
+  //
 
   doc.gc = gc
   if (persistence !== null) {
@@ -253,7 +266,7 @@ const pingTimeout = 30000
  * @param {any} req
  * @param {any} opts
  */
-exports.setupWSConnection = (conn, req, { docName = req.url.slice(1).split('?')[0], gc = true } = {}) => {
+exports.setupWSConnection = (conn, req, { docName = req.url.slice(1).split('?')[0], gc = true} = {}) => {
   conn.binaryType = 'arraybuffer'
   // get doc, initialize if it does not exist yet
   const doc = getYDoc(docName, gc)
